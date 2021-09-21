@@ -1,12 +1,12 @@
 #pragma once
-#define TOKENTYPE_LEN TOK_EOF - TOK_INT
+#define TOKENTYPE_LEN TOK_EOF - TOK_ADD + 1
 
 enum tokenType {
-   TOK_INT = 0,
-   TOK_ADD,
+   TOK_ADD = 0,
    TOK_SUB,
    TOK_MUL,
    TOK_DIV,
+   TOK_INT,
    TOK_EOF
 };
 

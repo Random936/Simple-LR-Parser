@@ -1,25 +1,14 @@
 ----------------
-Production rules
+Production Rules
 ----------------
-E' -> E
 E -> E + T | E - T | T
 T -> T * F | T / F | F
-F -> n | ( E )
+F -> n
 
 ---------
-Item sets
+Item Sets
 ---------
-
-I0:
-E' -> . E
-E -> . E + T
-E -> . E - T
-E -> . T
-T -> . T * F
-T -> . T / F
-T -> . F
-F -> . n
-F -> . ( E )
+{ E' -> . E ; E -> . E + T ;E -> . E - T ; E -> . T ; T -> . T * F ; T -> . T / F ; T -> . F ; F -> . n }
 
 I0 -> I1: E
 E' -> E .
@@ -37,59 +26,24 @@ T -> F .
 I0 -> I4: n
 F -> n .
 
-I0 -> I5: (
-F -> ( . E )
-E -> . E + T
-E -> . E - T
-E -> . T
-T -> . T * F
-T -> . T / F
-T -> . F
-F -> . n
-F -> . ( E )
-
-I1 -> I6: +
+I1 -> I5: +
 E -> E + . T
 T -> . T * F
 T -> . T / F
 T -> . F
 F -> . n
-F -> . ( E )
 
-I1 -> I7: - 
+I1 -> I6: -
 E -> E - . T
 T -> . T * F
 T -> . T / F
 T -> . F
 F -> . n
-F -> . ( E )
 
-I2 -> I8: *
+I2 -> I7: *
 T -> T * . F
 F -> . n
-F -> . ( E )
 
-I2 -> I9: /
+I2 -> I8: /
 T -> T / . F
 F -> . n
-F -> . ( E )
-
-I5 -> I10: E
-F -> ( E . )
-E -> E . + T
-E -> E . - T
-
-I6 -> I11: T
-E -> E + T .
-
-I7 -> I12: T
-E -> E - T .
-
-I8 -> I13: *
-T -> T * F .
-
-I9 -> I14: /
-T -> T / F .
-
-I10 -> I15: )
-F -> ( E ) .
