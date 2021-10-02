@@ -2,42 +2,26 @@
 
 #include "lexer.h"
 #include "ast.h"
+#include "stack.h"
 
 #define NONTERMINAL_NUM 3
 #define STATE_NUM 13
-
-enum dataType {
-   TOKEN,
-   STATE,
-   AST_NODE
-};
+#define ITEMSET_NUM 8
+#define STACK_SIZE 1024
 
 typedef struct {
    int state;
    char action;
 } TableNode;
 
-typedef struct StackNode_s StackNode;
-struct StackNode_s {
-   enum dataType type;
-   union {
-      Token *token;
-      TableNode *state;
-      ASTNode *node;
-   };
-   StackNode *next;
-};
-StackNode *StackNode_init(enum dataType type, void *data);
-StackNode *Stack_pop(StackNode **head);
-void Stack_push(StackNode **head, StackNode *node);
-
 typedef struct {
    Lexer *lexer;
    Token *crt;
-   StackNode *stack;
+   Stack *stack;
 } Parser;
 
 TableNode Parser_tableLookup(int state, Token *token);
+Parser *Parser_init(Lexer *lexer);
 void Parser_parse(Parser *parser);
-void Parser_reduce(Parser *parser);
-void Parser_shift(Parser *parser);
+void Parser_reduce(Parser *parser, int itemset);
+void Parser_shift(Parser *parser, int state);

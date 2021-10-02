@@ -4,11 +4,11 @@
 #include "include/token.h"
 
 char *tokenTypeLookup[] = {
-   "TOK_INT",
    "TOK_ADD",
    "TOK_SUB",
    "TOK_MUL",
    "TOK_DIV",
+   "TOK_INT",
    "TOK_EOF"
 };
 
@@ -17,6 +17,7 @@ Token *Token_init(enum tokenType type, char *start, int size) {
    token->type = type;
    token->start = start;
    token->size = size;
+   Token_print(token);
 
    return token;
 }

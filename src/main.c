@@ -1,14 +1,14 @@
 #include <stdio.h>
 #include "include/lexer.h"
+#include "include/parser.h"
 
 int main(int argc, char *argv[]) {
 
-   Lexer *lexer = Lexer_init();
-   Token *token = NULL;
+   char src[] = "10 + 3";
 
-   while ((token = Lexer_getToken(lexer))->type != TOK_EOF) {
-
-   }
+   Lexer *lexer = Lexer_init(src);
+   Parser *parser = Parser_init(lexer);
+   Parser_parse(parser);
 
    return 0;
 }
