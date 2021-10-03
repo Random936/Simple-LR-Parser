@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <assert.h>
 
 #include "include/parser.h"
 
@@ -26,17 +25,17 @@ void TableNode_print(TableNode *node) {
 TableNode parseTable[STATE_NUM][TOKENTYPE_LEN + NONTERMINAL_NUM] = {
    {          {0},          {0},         {0},         {0},  PTN('s', 4),          {0}, PTN(0, 1),  PTN(0, 2),  PTN(0, 3) },
    {  PTN('s', 5),  PTN('s', 6),         {0},         {0},          {0},  PTN('a', 0),       {0},        {0},        {0} },
-   {          {0},          {0}, PTN('s', 7), PTN('s', 8),          {0},          {0},       {0},        {0},        {0} },
-   {  PTN('r', 3),  PTN('r', 3), PTN('r', 3), PTN('r', 3),          {0},  PTN('r', 3),       {0},        {0},        {0} },
-   {  PTN('r', 4),  PTN('r', 4), PTN('r', 4), PTN('r', 4),          {0},  PTN('r', 4),       {0},        {0},        {0} },
+   {  PTN('r', 3),  PTN('r', 3), PTN('s', 7), PTN('s', 8),          {0},  PTN('r', 3),       {0},        {0},        {0} },
+   {  PTN('r', 6),  PTN('r', 6), PTN('r', 6), PTN('r', 6),          {0},  PTN('r', 6),       {0},        {0},        {0} },
+   {  PTN('r', 7),  PTN('r', 7), PTN('r', 7), PTN('r', 7),          {0},  PTN('r', 7),       {0},        {0},        {0} },
    {          {0},          {0},         {0},         {0},  PTN('s', 4),          {0},       {0},  PTN(0, 9),  PTN(0, 3) },
    {          {0},          {0},         {0},         {0},  PTN('s', 4),          {0},       {0}, PTN(0, 10),  PTN(0, 3) },
    {          {0},          {0},         {0},         {0},  PTN('s', 4),          {0},       {0},        {0}, PTN(0, 11) },
    {          {0},          {0},         {0},         {0},  PTN('s', 4),          {0},       {0},        {0}, PTN(0, 12) },
-   {          {0},          {0}, PTN('s', 7), PTN('s', 8),          {0},          {0},       {0},        {0},        {0} },
-   {          {0},          {0}, PTN('s', 7), PTN('s', 8),          {0},          {0},       {0},        {0},        {0} },
-   { PTN('r', 11), PTN('r', 11),         {0},         {0}, PTN('r', 11), PTN('r', 11),       {0},        {0},        {0} },
-   { PTN('r', 12), PTN('r', 12),         {0},         {0},          {0},          {0},       {0},        {0},        {0} },
+   {  PTN('r', 1),  PTN('r', 1), PTN('s', 7), PTN('s', 8),          {0},  PTN('r', 1),       {0},        {0},        {0} },
+   {  PTN('r', 2),  PTN('r', 2), PTN('s', 7), PTN('s', 8),          {0},  PTN('r', 2),       {0},        {0},        {0} },
+   {  PTN('r', 4),  PTN('r', 4),         {0},         {0},          {0},  PTN('r', 4),       {0},        {0},        {0} },
+   {  PTN('r', 5),  PTN('r', 5),         {0},         {0},          {0},  PTN('r', 5),       {0},        {0},        {0} },
 };
 
 Parser *Parser_init(Lexer *lexer) {
@@ -50,8 +49,8 @@ Parser *Parser_init(Lexer *lexer) {
    return parser;
 }
 
-TableNode Parser_tableLookup(int state, Token *token) {
-   return parseTable[state][token->type];
+TableNode Parser_tableLookup(int state, int type) {
+   return parseTable[state][type];
 }
 
 void Parser_adv(Parser *parser) {
@@ -60,15 +59,15 @@ void Parser_adv(Parser *parser) {
 
 void Parser_parse(Parser *parser) {
 
+
    while (1) {
 
-      TableNode rule = Parser_tableLookup(Stack_at(parser->stack, 0)->state, parser->crt);
+      TableNode rule = Parser_tableLookup(Stack_at(parser->stack, 0)->state, parser->crt->type);
 
       TableNode_print(&rule);
 
-      Stack_print(parser->stack);
-
       switch (rule.action) {
+         case 0: Stack_at(parser->stack, 0)->state = rule.state;
          case 's': Parser_shift(parser, rule.state); break;
          case 'r': Parser_reduce(parser, rule.state); break;
          case 'a': return;
@@ -79,35 +78,47 @@ void Parser_parse(Parser *parser) {
 
 void Parser_reduce(Parser *parser, int itemset) {
 
+   enum ASTType type;
    void *value = NULL;
 
    switch (itemset) {
-      case 1: // E' -> E
-         AST_init(Stack_at(parser->stack, 0), 0, NULL); break;
-      case 2: // E -> E + T
-         value = AST_init(Stack_at(parser->stack, -2), '+', Stack_at(parser->stack, 0)); break;
-      case 3: // E -> E - T
-         value = AST_init(Stack_at(parser->stack, -2), '-', Stack_at(parser->stack, 0)); break;
-      case 4: // E -> T
-         AST_init(Stack_at(parser->stack, 0), 0, NULL); break;
+      case 1: // E -> E + T
+         type = AST_EXPR;
+         value = Expr_init(Stack_valAt(parser->stack, -2), '+', Stack_valAt(parser->stack, 0));
          break;
-      case 5: // E -> T * F
-         value = AST_init(Stack_at(parser->stack, -2), '*', Stack_at(parser->stack, 0)); break;
-      case 6: // E -> T / F
-         value = AST_init(Stack_at(parser->stack, -2), '/', Stack_at(parser->stack, 0)); break;
-      case 7: // T -> F
-         value = AST_init(Stack_at(parser->stack, 0), 0, NULL); break;
+      case 2: // E -> E - T
+         type = AST_EXPR;
+         value = Expr_init(Stack_valAt(parser->stack, -2), '-', Stack_valAt(parser->stack, 0));
          break;
-      case 8: // F -> id
-         value = Literal_init(*(int *)Stack_at(parser->stack, 0)->value); break;
+      case 3: // E -> T
+         type = AST_EXPR;
+         value = Expr_init(NULL, 0, Stack_valAt(parser->stack, 0));
+         break;
+      case 4: // T -> T * F
+         type = AST_TERM;
+         value = Term_init(Stack_valAt(parser->stack, -2), '*', Stack_valAt(parser->stack, 0));
+         break;
+      case 5: // T -> T / F
+         type = AST_TERM;
+         value = Term_init(Stack_valAt(parser->stack, -2), '/', Stack_valAt(parser->stack, 0));
+         break;
+      case 6: // T -> F
+         type = AST_TERM;
+         value = Term_init(NULL, 0, Stack_valAt(parser->stack, 0));
+         break;
+      case 7: // F -> id
+         type = AST_FACT;
+         value = Fact_init(*(int *)Stack_valAt(parser->stack, 0));
          break;
    }
 
-   StackNode *new = StackNode_init(itemset, AST_NODE, value);
+   StackNode *new = StackNode_init(0, AST_NODE, AST_init(type, value));
    Stack_rem(parser->stack, itemSetLength[itemset]);
+   new->state = Parser_tableLookup(Stack_at(parser->stack, 0)->state, TOKENTYPE_LEN + type).state;
    Stack_push(parser->stack, new);
 }
 
 void Parser_shift(Parser *parser, int state) {
    Stack_push(parser->stack, StackNode_init(state, TOKEN, parser->crt));
+   Parser_adv(parser);
 }

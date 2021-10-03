@@ -20,7 +20,7 @@ typedef struct {
    Stack *stack;
 } Parser;
 
-TableNode Parser_tableLookup(int state, Token *token);
+TableNode Parser_tableLookup(int state, int type);
 Parser *Parser_init(Lexer *lexer);
 void Parser_parse(Parser *parser);
 void Parser_reduce(Parser *parser, int itemset);
