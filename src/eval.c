@@ -5,8 +5,6 @@
 
 int Expr_eval(Expr *expr) {
 
-   if (expr->right == NULL)
-      printf("EXPR: Right is null\n");
 
    int b = Term_eval(expr->right);
 
@@ -23,16 +21,13 @@ int Expr_eval(Expr *expr) {
 
 int Term_eval(Term *term) {
 
-   if (term->right == NULL)
-      printf("TERM: Right is null\n");
-
    int b = Fact_eval(term->right);
 
    if (term->left != NULL) {
-      int a = Term_eval(term);
+      int a = Term_eval(term->left);
       switch (term->op) {
-         case '+': return a + b;
-         case '-': return a - b;
+         case '*': return a * b;
+         case '/': return a / b;
       }
    }
 
@@ -40,8 +35,5 @@ int Term_eval(Term *term) {
 }
 
 int Fact_eval(Fact *fact) {
-   if (fact == NULL)
-      printf("Fact is null\n");
-
    return fact->val;
 }

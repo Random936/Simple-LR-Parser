@@ -14,6 +14,11 @@ Lexer *Lexer_init(char *src) {
    return lexer;
 }
 
+void Lexer_error(Lexer *lexer) {
+   printf("ERROR: Invalid token, %c\n", lexer->crt);
+   exit(1);
+}
+
 void Lexer_adv(Lexer *lexer) {
    lexer->crt = lexer->src[++lexer->i];
 }
@@ -50,7 +55,9 @@ Token *Lexer_getToken(Lexer *lexer) {
       case '-': return Lexer_advToken(lexer, TOK_SUB);
       case '*': return Lexer_advToken(lexer, TOK_MUL);
       case '/': return Lexer_advToken(lexer, TOK_DIV);
+      case 0: return Token_init(TOK_EOF, NULL, 0);
    }
 
-   return Token_init(TOK_EOF, NULL, 0);
+   Lexer_error(lexer);
+   return NULL;
 }

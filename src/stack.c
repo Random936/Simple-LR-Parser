@@ -3,12 +3,6 @@
 
 #include "include/stack.h"
 
-char *dataTypeLookup[] = {
-   "START",
-   "TOKEN",
-   "AST_NODE"
-};
-
 StackNode *StackNode_init(int state, enum dataType type, void *value) {
 
    StackNode *node = malloc(sizeof(StackNode));
@@ -17,15 +11,6 @@ StackNode *StackNode_init(int state, enum dataType type, void *value) {
    node->value = value;
 
    return node;
-}
-
-void StackNode_print(StackNode *node) {
-   printf(
-         "<StackNode type=%s state=%d value=%p>\n",
-         dataTypeLookup[node->type],
-         node->state,
-         node->value
-      );
 }
 
 Stack *Stack_init(int size) {
@@ -51,9 +36,4 @@ void Stack_rem(Stack *stack, int num) {
 
 void Stack_push(Stack *stack, StackNode *node) {
    stack->nodes[++stack->sp] = node;
-}
-
-void Stack_print(Stack *stack) {
-   for (int i = 0; i <= stack->sp; i++)
-      StackNode_print(stack->nodes[i]);
 }

@@ -6,7 +6,9 @@
 enum dataType {
    START = 0,
    TOKEN,
-   AST_NODE
+   AST_EXPR = 2,
+   AST_TERM,
+   AST_FACT
 };
 
 typedef struct {
@@ -28,4 +30,3 @@ StackNode *Stack_at(Stack *stack, int offset);
 void *Stack_valAt(Stack *stack, int offset);
 void Stack_rem(Stack *stack, int num);
 void Stack_push(Stack *stack, StackNode *node);
-void Stack_print(Stack *stack);

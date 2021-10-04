@@ -17,11 +17,12 @@ Token *Token_init(enum tokenType type, char *start, int size) {
    token->type = type;
    token->start = start;
    token->size = size;
-   Token_print(token);
+   //Token_print(token);
 
    return token;
 }
 
+/*
 void Token_print(Token *token) {
    printf(
       "<Token type=%s value=%.*s>\n",
@@ -30,3 +31,4 @@ void Token_print(Token *token) {
       token->start
    );
 }
+*/

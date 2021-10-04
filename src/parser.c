@@ -14,6 +14,7 @@ void error(char *msg) {
 
 int itemSetLength[ITEMSET_NUM] = {1, 3, 3, 1, 3, 3, 1, 1};
 
+/*
 void TableNode_print(TableNode *node) {
    printf(
          "<TableNode action=%c state=%d>\n",
@@ -21,21 +22,22 @@ void TableNode_print(TableNode *node) {
          node->state
       );
 }
+*/
 
 TableNode parseTable[STATE_NUM][TOKENTYPE_LEN + NONTERMINAL_NUM] = {
-   {          {0},          {0},         {0},         {0},  PTN('s', 4),          {0}, PTN(0, 1),  PTN(0, 2),  PTN(0, 3) },
-   {  PTN('s', 5),  PTN('s', 6),         {0},         {0},          {0},  PTN('a', 0),       {0},        {0},        {0} },
-   {  PTN('r', 3),  PTN('r', 3), PTN('s', 7), PTN('s', 8),          {0},  PTN('r', 3),       {0},        {0},        {0} },
-   {  PTN('r', 6),  PTN('r', 6), PTN('r', 6), PTN('r', 6),          {0},  PTN('r', 6),       {0},        {0},        {0} },
-   {  PTN('r', 7),  PTN('r', 7), PTN('r', 7), PTN('r', 7),          {0},  PTN('r', 7),       {0},        {0},        {0} },
-   {          {0},          {0},         {0},         {0},  PTN('s', 4),          {0},       {0},  PTN(0, 9),  PTN(0, 3) },
-   {          {0},          {0},         {0},         {0},  PTN('s', 4),          {0},       {0}, PTN(0, 10),  PTN(0, 3) },
-   {          {0},          {0},         {0},         {0},  PTN('s', 4),          {0},       {0},        {0}, PTN(0, 11) },
-   {          {0},          {0},         {0},         {0},  PTN('s', 4),          {0},       {0},        {0}, PTN(0, 12) },
-   {  PTN('r', 1),  PTN('r', 1), PTN('s', 7), PTN('s', 8),          {0},  PTN('r', 1),       {0},        {0},        {0} },
-   {  PTN('r', 2),  PTN('r', 2), PTN('s', 7), PTN('s', 8),          {0},  PTN('r', 2),       {0},        {0},        {0} },
-   {  PTN('r', 4),  PTN('r', 4),         {0},         {0},          {0},  PTN('r', 4),       {0},        {0},        {0} },
-   {  PTN('r', 5),  PTN('r', 5),         {0},         {0},          {0},  PTN('r', 5),       {0},        {0},        {0} },
+   { PTN('i', 0),  PTN('i', 0), PTN('i', 0), PTN('i', 0),  PTN('s', 4),  PTN('i', 0),   PTN(0, 1),   PTN(0, 2),   PTN(0, 3) },
+   { PTN('s', 5),  PTN('s', 6), PTN('i', 0), PTN('i', 0),  PTN('i', 0),  PTN('a', 0), PTN('i', 0), PTN('i', 0), PTN('i', 0) },
+   { PTN('r', 3),  PTN('r', 3), PTN('s', 7), PTN('s', 8),  PTN('i', 0),  PTN('r', 3), PTN('i', 0), PTN('i', 0), PTN('i', 0) },
+   { PTN('r', 6),  PTN('r', 6), PTN('r', 6), PTN('r', 6),  PTN('i', 0),  PTN('r', 6), PTN('i', 0), PTN('i', 0), PTN('i', 0) },
+   { PTN('r', 7),  PTN('r', 7), PTN('r', 7), PTN('r', 7),  PTN('i', 0),  PTN('r', 7), PTN('i', 0), PTN('i', 0), PTN('i', 0) },
+   { PTN('i', 0),  PTN('i', 0), PTN('i', 0), PTN('i', 0),  PTN('s', 4),  PTN('i', 0), PTN('i', 0),   PTN(0, 9),   PTN(0, 3) },
+   { PTN('i', 0),  PTN('i', 0), PTN('i', 0), PTN('i', 0),  PTN('s', 4),  PTN('i', 0), PTN('i', 0),  PTN(0, 10),   PTN(0, 3) },
+   { PTN('i', 0),  PTN('i', 0), PTN('i', 0), PTN('i', 0),  PTN('s', 4),  PTN('i', 0), PTN('i', 0), PTN('i', 0),  PTN(0, 11) },
+   { PTN('i', 0),  PTN('i', 0), PTN('i', 0), PTN('i', 0),  PTN('s', 4),  PTN('i', 0), PTN('i', 0), PTN('i', 0),  PTN(0, 12) },
+   { PTN('r', 1),  PTN('r', 1), PTN('s', 7), PTN('s', 8),  PTN('i', 0),  PTN('r', 1), PTN('i', 0), PTN('i', 0), PTN('i', 0) },
+   { PTN('r', 2),  PTN('r', 2), PTN('s', 7), PTN('s', 8),  PTN('i', 0),  PTN('r', 2), PTN('i', 0), PTN('i', 0), PTN('i', 0) },
+   { PTN('r', 4),  PTN('r', 4), PTN('r', 4), PTN('r', 4),  PTN('i', 0),  PTN('r', 4), PTN('i', 0), PTN('i', 0), PTN('i', 0) },
+   { PTN('r', 5),  PTN('r', 5), PTN('r', 5), PTN('r', 5),  PTN('i', 0),  PTN('r', 5), PTN('i', 0), PTN('i', 0), PTN('i', 0) },
 };
 
 Parser *Parser_init(Lexer *lexer) {
@@ -59,15 +61,21 @@ void Parser_adv(Parser *parser) {
 
 void Parser_parse(Parser *parser) {
 
-
    while (1) {
 
       TableNode rule = Parser_tableLookup(Stack_at(parser->stack, 0)->state, parser->crt->type);
 
-      TableNode_print(&rule);
+      //TableNode_print(&rule);
 
       switch (rule.action) {
          case 0: Stack_at(parser->stack, 0)->state = rule.state;
+         case 'i': 
+              printf(
+                    "INFO: Last rule index: (%d, %d)\n",
+                    parser->crt->type,
+                    Stack_at(parser->stack, 0)->state
+                 );
+              error("Unexpected token.");
          case 's': Parser_shift(parser, rule.state); break;
          case 'r': Parser_reduce(parser, rule.state); break;
          case 'a': return;
@@ -78,7 +86,7 @@ void Parser_parse(Parser *parser) {
 
 void Parser_reduce(Parser *parser, int itemset) {
 
-   enum ASTType type;
+   enum dataType type;
    void *value = NULL;
 
    switch (itemset) {
@@ -108,13 +116,13 @@ void Parser_reduce(Parser *parser, int itemset) {
          break;
       case 7: // F -> id
          type = AST_FACT;
-         value = Fact_init(*(int *)Stack_valAt(parser->stack, 0));
+         value = Fact_init(atoi(((Token *)Stack_valAt(parser->stack, 0))->start));
          break;
    }
 
-   StackNode *new = StackNode_init(0, AST_NODE, AST_init(type, value));
+   StackNode *new = StackNode_init(0, type, value);
    Stack_rem(parser->stack, itemSetLength[itemset]);
-   new->state = Parser_tableLookup(Stack_at(parser->stack, 0)->state, TOKENTYPE_LEN + type).state;
+   new->state = Parser_tableLookup(Stack_at(parser->stack, 0)->state, TOKENTYPE_LEN + (type - AST_EXPR)).state;
    Stack_push(parser->stack, new);
 }
 

@@ -2,12 +2,6 @@
 
 #include "token.h"
 
-enum ASTType {
-   AST_EXPR,
-   AST_TERM,
-   AST_FACT
-};
-
 typedef struct {
    int val;
 } Fact;
@@ -28,10 +22,3 @@ struct Expr_s {
    Term *right;
 };
 Expr *Expr_init(Expr *left, char op, Term *right);
-
-typedef struct {
-   enum ASTType type;
-   void *node;
-} ASTNode;
-ASTNode *AST_init(enum ASTType type, void *node);
-void AST_print(ASTNode *ast);
